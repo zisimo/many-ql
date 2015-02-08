@@ -11,15 +11,14 @@ import "github.com/software-engineering-amsterdam/many-ql/carlos.cirello/ast"
 // functionality.
 type Inputer interface {
 	InputQuestion(q *ast.Question)
+	Loop()
+	Flush()
 }
 
 // New instantiates a frontend goroutine, looping all the
 // communications with the VM into the chosen Frontend
 // (GUI, Text, Web).
-func New(driver Inputer) (fromVM, toVM chan *Event) {
-	fromVM = make(chan *Event)
-	toVM = make(chan *Event)
-
+func New(fromVM, toVM chan *Event, driver Inputer) {
 	f := &frontend{
 		receive: fromVM,
 		send:    toVM,
@@ -27,8 +26,6 @@ func New(driver Inputer) (fromVM, toVM chan *Event) {
 	}
 
 	go f.loop()
-
-	return fromVM, toVM
 }
 
 type frontend struct {
@@ -42,14 +39,13 @@ func (f *frontend) loop() {
 	for {
 		select {
 		case r := <-f.receive:
-			if r.Type == READY_P {
+			if r.Type == ReadyP {
 				emptyQuestion := &ast.Question{}
-				f.send <- &Event{READY_T, *emptyQuestion}
-			} else if r.Type == RENDER {
+				f.send <- &Event{ReadyT, *emptyQuestion}
+			} else if r.Type == Render {
 				f.driver.InputQuestion(&r.Question)
-				go func(send chan *Event, q ast.Question) {
-					send <- &Event{ANSWER, q}
-				}(f.send, r.Question)
+			} else if r.Type == Flush {
+				f.driver.Flush()
 			}
 		default:
 			//noop
