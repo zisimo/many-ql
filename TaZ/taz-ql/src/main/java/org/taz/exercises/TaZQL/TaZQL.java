@@ -11,6 +11,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.io.IOUtils;
 
+@SuppressWarnings("unused")
 public class TaZQL {
 	public static void main(String[] args) throws IOException {
 		ANTLRInputStream input = null;
@@ -37,12 +38,12 @@ public class TaZQL {
 
 	 
 	    // Specify our entry point
-//	    DrinkSentenceContext drinkSentenceContext = parser.drinkSentence();
 		
-	    ParseTreeWalker walker = new ParseTreeWalker();
-	    MyTaZQLListener listener = new MyTaZQLListener();
-	    walker.walk(listener, parser.init());
+//	    ParseTreeWalker walker = new ParseTreeWalker();
+//	    MyTaZQLListener listener = new MyTaZQLListener();
+//	    walker.walk(listener, parser.init());
 		
-//		System.out.println(tree.toStringTree(parser)); // print LISP-style tree
+	    ParseTree tree = parser.init();
+		System.out.println(tree.toStringTree(parser)); // print LISP-style tree
 	}
 }
