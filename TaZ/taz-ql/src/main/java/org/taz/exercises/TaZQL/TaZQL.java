@@ -12,13 +12,14 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.io.IOUtils;
 
 @SuppressWarnings("unused")
+
 public class TaZQL {
 	public static void main(String[] args) throws IOException {
 		ANTLRInputStream input = null;
 		
 		try {
 			
-			InputStream inputStream = TaZQL.class.getResourceAsStream("source.tazql");
+			InputStream inputStream = TaZQL.class.getResourceAsStream("source2.tazql");
 			String tazQLSourceCode = IOUtils.toString(inputStream, "UTF-8");
 			input = new ANTLRInputStream(tazQLSourceCode);
 			
@@ -36,12 +37,9 @@ public class TaZQL {
 		// create a parser that feeds off the tokens buffer
 		TaZQLParser parser = new TaZQLParser(tokens);
 
-	 
-	    // Specify our entry point
-		
-//	    ParseTreeWalker walker = new ParseTreeWalker();
-//	    MyTaZQLListener listener = new MyTaZQLListener();
-//	    walker.walk(listener, parser.init());
+	    ParseTreeWalker walker = new ParseTreeWalker();
+	    MyTaZQLListener listener = new MyTaZQLListener();
+	    walker.walk(listener, parser.init());
 		
 	    ParseTree tree = parser.init();
 		System.out.println(tree.toStringTree(parser)); // print LISP-style tree
