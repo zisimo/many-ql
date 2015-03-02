@@ -18,6 +18,7 @@ import uva.sc.logic.unaryExpressions.*;
 import uva.sc.types.Boolean;
 import uva.sc.types.Number;
 import uva.sc.types.Type;
+import uva.sc.types.Unidentified;
 
 public class TypeCheckerVisitor implements INodeVisitor<INode>{
 
@@ -243,6 +244,10 @@ public class TypeCheckerVisitor implements INodeVisitor<INode>{
 	}
 	
 	public Type visit(Number number) {
+		return null;
+	}
+
+	public Type visit(Unidentified unidentified) {
 		return null;
 	}
 }

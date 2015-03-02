@@ -11,6 +11,7 @@ import uva.sc.logic.unaryExpressions.*;
 import uva.sc.types.Boolean;
 import uva.sc.types.Number;
 import uva.sc.types.String;
+import uva.sc.types.Unidentified;
 
 public interface INodeVisitor<T> {
 
@@ -67,4 +68,6 @@ public interface INodeVisitor<T> {
 	public T visit(StringAtom str);
 
 	public T visit(Number number);
+
+	public T visit(Unidentified unidentified);
 }
