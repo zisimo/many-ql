@@ -26,8 +26,9 @@ public class Form implements INode{
 	
 	public String toString() {
 		String result ="[Form]:{\n\t" + this.id.toString() + "\n";
-		for (int i = 0 ; i < this.statements.size() ; i++)
+		for (int i = 0 ; i < this.statements.size() ; i++) {
 			result += "\t\t[Statement]:{" + statements.get(i).toString() + "}\n";
+		}
 		return result + "\n}";
 	}
 

@@ -2,91 +2,73 @@ package uva.sc.gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import org.antlr.v4.runtime.ANTLRFileStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+
+import uva.sc.ast.INode;
+import uva.sc.evaluator.EvaluatorVisitor;
+import uva.sc.parser.GrammarLexer;
+import uva.sc.parser.GrammarParser;
+import uva.sc.parser.QLVisitor;
+
 @SuppressWarnings("serial")
 public class QuestionareForm extends JFrame {	
 	
-	public QuestionareForm(){
-		JPanel questionsPanel = new JPanel();
-        JScrollPane scroller = new JScrollPane(questionsPanel);
+	public QuestionareForm() throws IOException{
+		
+		CharStream in = new ANTLRFileStream("C:/Users/Pantelis/git/software-construction/QL/form/test.grammar");
+        //CharStream in = new ANTLRFileStream("/Users/santiagovalenciavargas/Documents/UvA/workspace/Software Construction//QL/QL/form/test.grammar");
+        GrammarLexer lexer = new GrammarLexer(in);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        GrammarParser parser = new GrammarParser(tokens);
+        ParseTree tree = parser.form();
+        
+
+        QLVisitor visitor = new QLVisitor();
+        INode questionare = visitor.visit(tree);
+        
+        EvaluatorVisitor eval = new EvaluatorVisitor();
+        questionare.accept(eval);
+        
+        GUIVisitor vis = new GUIVisitor(eval);
+        questionare.accept(vis);
+        
+        /*-------------------------------------------------------------------*/ 
+        
+        JButton submitButton = new JButton("Submit");
+        submitButton.setName("subButton");
+        vis.getComponentList().add(submitButton);
+        JPanel questionarePanel = new JPanel();
+        JScrollPane scrollerPane = new JScrollPane(questionarePanel);
 		setTitle ("QL Questionare Form");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		questionsPanel.setLayout(new BoxLayout(questionsPanel, BoxLayout.Y_AXIS));
-		questionsPanel.setBorder(new EmptyBorder(new Insets(40, 60, 40, 60)));
-        
-		scroller.setPreferredSize(new Dimension(300,600));
-
-		questionsPanel.add(new JLabel("Question 1"));
-		questionsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-		questionsPanel.add(new JTextField(10));
-		questionsPanel.add(new JLabel("Question 2"));
-		questionsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-		questionsPanel.add(new JTextField());
-		questionsPanel.add(new JLabel("Question 3"));
-		questionsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-		questionsPanel.add(new JTextField(10));
-		questionsPanel.add(new JLabel("Question 4"));
-		questionsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-		questionsPanel.add(new JTextField(10));
-		questionsPanel.add(new JLabel("Question 5"));
-		questionsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-		questionsPanel.add(new JTextField(10));
-		questionsPanel.add(new JLabel("Question 6"));
-		questionsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-		ButtonGroup bg = new ButtonGroup();
-		JRadioButton b1 = new JRadioButton("op1");
-		JRadioButton b2 = new JRadioButton("op2");
-		JRadioButton b3 = new JRadioButton("op3");
-		bg.add(b1);
-		bg.add(b2);
-		bg.add(b3);
-		questionsPanel.add(b1);
-		questionsPanel.add(b2);
-		questionsPanel.add(b3);
-		questionsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-		questionsPanel.add(new JButton("Submit"));
-		
-        add(scroller);
-
+        questionarePanel.setLayout(new GridLayout(vis.getComponentList().size(),0));
+        scrollerPane.setPreferredSize(new Dimension(300,600));
+        for (Component component : vis.getComponentList()) {
+        	questionarePanel.add(component);
+        }
+        add(scrollerPane);
         pack();
-
-		
-		
-		//jugar.addActionListener(lisJugar);
-		//juego.addActionListener(lisJugar);
-		/*botonesNivel.setBounds(150, 450, 250, 250);
-		imagen.setBounds(40, 40, 500, 400);
-		botonJugar.setBounds(180, 0, 100, 100);
-		botonesNivel.add(n1);
-		botonesNivel.add(n2);
-		botonesNivel.add(n3);
-		botonJugar.add(jugar);
-		imagen.add(l);
-		cp.add(imagen);
-		cp.add(botonesNivel);
-		cp.add(botonJugar);*/
-	}
-	
-	private class ListenerJugar implements ActionListener{
-			
-		public void actionPerformed(ActionEvent evt){
-
-		}
-	}
-	
-	private class ListenerNivel implements ActionListener{
-		
-		public void actionPerformed(ActionEvent evt){
-		}
+        vis.addListeners();
 	}
 	
 	public static void main(String[] args) {
-		QuestionareForm form = new QuestionareForm();
-		form.setVisible(true);
+		QuestionareForm form;
+		try {
+			form = new QuestionareForm();
+			form.setVisible(true);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
 

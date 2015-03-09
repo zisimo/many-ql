@@ -3,15 +3,17 @@ package uva.sc.atom;
 import uva.sc.ast.INodeVisitor;
 import uva.sc.logic.Expression;
 
-public class BooleanAtom extends Literal{
+public class BooleanAtom extends Expression{
 
 	final String value;
 	
 	public BooleanAtom(boolean value) {
-       if (value)
+       if (value) {
 			this.value = "true";
-		else
+       }
+       else {
 			this.value = "false";
+       }
 	}
 	
 	public String getValue() {

@@ -24,10 +24,12 @@ public class If_Statement extends Statement {
 
 	public String toString() {
 		String result = "[IF] (";
-		if (this.expr != null)
+		if (this.expr != null) {
 			result += this.expr.toString() + ") THEN {";
-		for (int i = 0 ; i < this.questions.size() ; i++)
+		}
+		for (int i = 0 ; i < this.questions.size() ; i++) {
 			result += questions.get(i).toString() + "," ;
+		}
 		return result +"}";
 	}
 

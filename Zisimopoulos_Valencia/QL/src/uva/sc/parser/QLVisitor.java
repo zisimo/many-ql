@@ -10,6 +10,7 @@ import uva.sc.atom.BooleanAtom;
 import uva.sc.atom.ID;
 import uva.sc.atom.NumberAtom;
 import uva.sc.atom.StringAtom;
+import uva.sc.gui.GUIVisitor;
 import uva.sc.logic.Expression;
 import uva.sc.logic.Form;
 import uva.sc.logic.If_Statement;
@@ -18,11 +19,20 @@ import uva.sc.logic.Statement;
 import uva.sc.logic.binaryExpressions.*;
 import uva.sc.logic.unaryExpressions.*;
 import uva.sc.types.Type;
+import uva.sc.types.Unidentified;
 
 public class QLVisitor extends GrammarBaseVisitor<INode> {
 
-/*========================== Parsing blocks ============================*/
+	private static QLVisitor instance = null;
 	
+	public static QLVisitor getInstance() {
+		if (instance == null) {
+			instance = new QLVisitor();
+		}
+		return instance;
+	}
+	
+/*========================== Parsing blocks ============================*/
 	
 	public Form visitForm(@NotNull GrammarParser.FormContext ctx) {
 		List<Statement> statementList = new ArrayList<Statement>();
@@ -53,7 +63,7 @@ public class QLVisitor extends GrammarBaseVisitor<INode> {
 	 
 	public Type visitType(@NotNull GrammarParser.TypeContext ctx) { 
 		String type = ctx.getText();
-		Type result = null;
+		Type result = new Unidentified();
 		switch (type){
 			case "boolean": 
 				result = new uva.sc.types.Boolean(); 

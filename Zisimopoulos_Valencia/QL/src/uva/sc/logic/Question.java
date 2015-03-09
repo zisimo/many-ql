@@ -5,7 +5,7 @@ import uva.sc.atom.ID;
 import uva.sc.types.Type;
 
 
-public class Question extends Statement implements Type{
+public class Question extends Statement{
 
 	String str;
 	ID id;
@@ -34,7 +34,7 @@ public class Question extends Statement implements Type{
 	}
 
 	public Type getType() {
-		return (Type)type;
+		return type;
 	}
 
 	public Expression getExpr() {
@@ -43,8 +43,9 @@ public class Question extends Statement implements Type{
 	
 	public String toString() {
 		String result = "[Question]: [String]: " + this.str + ", " + this.id.toString() + ", " + this.type.toString();
-		if (this.expr != null)
+		if (this.expr != null) {
 			result += this.expr.toString();
+		}
 		return result;		
 	}
 

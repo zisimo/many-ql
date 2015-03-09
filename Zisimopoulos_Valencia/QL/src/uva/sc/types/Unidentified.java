@@ -1,10 +1,11 @@
 package uva.sc.types;
 
 import uva.sc.ast.INodeVisitor;
+import uva.sc.logic.Expression;
 
 public class Unidentified implements Type {
 
-	public java.lang.String toString(){
+	public java.lang.String toString() {
 		return "[Type]: undefined";
 	}
 
@@ -12,4 +13,19 @@ public class Unidentified implements Type {
 		return visitor.visit(this);
 	}
 
+	public boolean equals(Type type) {
+		if(type == null) {
+			return false;
+		}
+		if(type instanceof Unidentified) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public Expression defaultValue() {
+		return null;
+	}
 }
